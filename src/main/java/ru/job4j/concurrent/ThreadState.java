@@ -15,39 +15,41 @@ package ru.job4j.concurrent;
  *
  *
  * @author Alex_life
- * @version 1.0
- * @since 09.09.2022
+ * @version 2.0
+ * @since 10.09.2022
  */
 public class ThreadState {
+
     public static void main(String[] args) {
-        Thread first = new Thread(
-                () -> {}
-        );                                                     /* New - Создан объект нити */
         /* Чтобы получить состояние нити можно воспользоваться методом - getState()
-        * Этот метод возвращает перечисления Thread.State
-        * Тело цикла while выполняется произвольное количество раз!!!
-        * За управление нитями в Java отвечает планировщик задач. Он решает, сколько времени отвести на выполнение одной
-        * задачи. Это время зависит от текущей ситуации. Если задач много, то переключение между нитями будет частое.
-        */
-        System.out.println(first.getState()  + " - create new thread first");
-        first.start();                                         /* Runnable - У объекта нити вызван метод start */
-        /* В цикле мы проверяем состояние запущенной нити */
-        while (first.getState() != Thread.State.TERMINATED) {  /* Terminated - Все операторы в методе run выполнены */
+         * Этот метод возвращает перечисления Thread.State
+         * Тело цикла while выполняется произвольное количество раз!!!
+         * Поэтому и вывод состояний будет произвольное.
+         * За управление нитями в Java отвечает планировщик задач.Он решает,сколько времени отвести на выполнение одной
+         * задачи. Это время зависит от текущей ситуации. Если задач много, то переключение между нитями будет частое.
+         */
+        /* NEW - создаем две нити и выводим их состояния в консоль */
+        Thread first = new Thread(
+                () -> System.out.println(Thread.currentThread().getName() + " - нить first")
+        );
+        Thread second = new Thread(
+                () -> System.out.println(Thread.currentThread().getName() + " - нить second")
+        );
+
+        /* RUNNABLE - У объектов нитей вызван метод start */
+        first.start();
+        second.start();
+
+        /* В цикле проверяем состояние запущенных нитей */
+        /* когда состояние одной из нитей становится Terminated - останавливаем метод run */
+        while (first.getState() != Thread.State.TERMINATED
+                || second.getState() != Thread.State.TERMINATED) {
             System.out.println(first.getState() + " - run first");
+            System.out.println(second.getState() + " - run second");
         }
         System.out.println(first.getState() + " - terminated first");
+        System.out.println(second.getState() + " - terminated first");
 
-        /* создаем вторую нить и выводим ее состояния в консоль */
-        Thread second = new Thread(
-                () -> {}
-        );
-        System.out.println(second.getState()  + " - it`s second");
-        second.start();
-        while (second.getState() != Thread.State.TERMINATED) {
-            System.out.println(second.getState() + " - it`s second");
-        }
-        System.out.println(second.getState() + " - it`s second");
-
-        System.out.println(Thread.currentThread().getName() + " the work is completed");
+        System.out.println(Thread.currentThread().getName() + " - нить main");
     }
 }
