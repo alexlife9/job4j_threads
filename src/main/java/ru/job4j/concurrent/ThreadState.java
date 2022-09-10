@@ -15,8 +15,8 @@ package ru.job4j.concurrent;
  *
  *
  * @author Alex_life
- * @version 2.0
- * @since 10.09.2022
+ * @version 3.0
+ * @since 11.09.2022
  */
 public class ThreadState {
 
@@ -44,12 +44,12 @@ public class ThreadState {
         /* когда состояние одной из нитей становится Terminated - останавливаем метод run */
         while (first.getState() != Thread.State.TERMINATED
                 || second.getState() != Thread.State.TERMINATED) {
-            System.out.println(first.getState() + " - run first");
-            System.out.println(second.getState() + " - run second");
+            System.out.println("First thread state: " + first.getState()
+                    + ". Second thread state: " + second.getState() + ".");
         }
         System.out.println(first.getState() + " - terminated first");
-        System.out.println(second.getState() + " - terminated first");
+        System.out.println(second.getState() + " - terminated second");
 
-        System.out.println(Thread.currentThread().getName() + " - нить main");
+        System.out.println(Thread.currentThread().getName() + " - нить main: работа завершена");
     }
 }
