@@ -4,8 +4,7 @@ package ru.job4j.concurrent;
  * Прерывание нити
  *
  * @author Alex_life
- * @version 2.0
- * добавил прерывание в блоке catch
+ * @version 3.0
  * @since 10.09.2022
  */
 public class ConsoleProgress implements Runnable {
@@ -26,14 +25,10 @@ public class ConsoleProgress implements Runnable {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Thread progress = new Thread(new ConsoleProgress());
-        try {
-            progress.start();
-            Thread.sleep(4000);
-            progress.interrupt();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        progress.start();
+        Thread.sleep(4000);
+        progress.interrupt();
     }
 }
