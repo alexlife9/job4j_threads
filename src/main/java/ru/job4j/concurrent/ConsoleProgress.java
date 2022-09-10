@@ -5,6 +5,7 @@ package ru.job4j.concurrent;
  *
  * @author Alex_life
  * @version 2.0
+ * добавил прерывание в блоке catch
  * @since 10.09.2022
  */
 public class ConsoleProgress implements Runnable {
