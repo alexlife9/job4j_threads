@@ -4,7 +4,7 @@ package ru.job4j.concurrent;
  * Прерывание нити
  *
  * @author Alex_life
- * @version 1.0
+ * @version 2.0
  * @since 10.09.2022
  */
 public class ConsoleProgress implements Runnable {
@@ -17,12 +17,13 @@ public class ConsoleProgress implements Runnable {
                     Thread.sleep(500);
                     System.out.print("\r load: " + process);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
 
                 }
             }
         }
     }
+
 
     public static void main(String[] args) {
         Thread progress = new Thread(new ConsoleProgress());
