@@ -15,12 +15,12 @@ import java.net.URL;
  * Пауза должна вычисляться, а не быть константой.
  *
  * @author Alex_life
- * @version 1.0
- * @since 11.09.2022
+ * @version 2.0
+ * @since 12.09.2022
  */
 public class Wget implements Runnable {
     private final String url; /* откуда качаем */
-    private final int speed;  /* скорость скачивания */
+    private final int speed;  /* скорость скачивания - байт/сек */
     private final String target; /* куда качаем */
 
     public Wget(String url, int speed, String target) {
@@ -35,33 +35,55 @@ public class Wget implements Runnable {
         try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
              FileOutputStream fileOutputStream = new FileOutputStream(target)) {
             byte[] dataBuffer = new byte[1024];
-            int bytesRead;
-
+            int bytesRead; /* прочитанные байты из исходника */
+            long bytesWrited = 0; /* записанные байты в конечный файл */
             /* задаем переменную старта, равную текущему времени */
             long timeStart = System.currentTimeMillis();
+            /* включаем цикл - пока есть что читать - будем записывать */
             while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
                 fileOutputStream.write(dataBuffer, 0, bytesRead);
-                long timeDownloads = System.currentTimeMillis() - timeStart;
-                if (timeDownloads < speed) {
+                bytesWrited = bytesWrited + bytesRead; /* каждый виток цикла прибавляем кол-во записанных байт */
+                if (bytesWrited >= speed) { /* если скорость записи будет больше или равна указанной в параметрах */
+                    long timeDownloads = System.currentTimeMillis() - timeStart; /* то измеряем время ушедшее на это */
                     /* если общее время загрузки меньше заданного времени скачивания, то задаем паузу скачивания */
-                    Thread.sleep(speed - timeDownloads);
+                    if (timeDownloads < 1000) { /* если время загрузки меньше 1 секунды */
+                        Thread.sleep(1000 - timeDownloads); /* то вводим задержку равную остатку от секунды */
+                    }
+                    for (int i = 0; i < 100; i++) {
+                        System.out.print("\rЗагрузка : " + i + "%");
+                        Thread.sleep(1000 - timeDownloads);
+                    }
                 }
-                timeStart = System.currentTimeMillis();
+
+                timeStart = System.currentTimeMillis(); /* перед завершением цикла устанавливаем текущее время */
+                bytesWrited = 0; /* и обнуляем счетчик прочитанных байт */
             }
-        } catch (IOException | InterruptedException e) {
+            System.out.println("Загрузка завершена!");
+        } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+            Thread.currentThread().interrupt();
         }
     }
 
+    public static void validateArgs(String[] args) {
+        if (args.length != 3) {
+            throw new IllegalArgumentException();
+        }
+
+    }
+
     public static void main(String[] args) throws InterruptedException {
-        /*String url = args[0];
+        /* перед запуском мейна прописываем в конфигурацию в поле program arguments следующую строку:
+        * https://proof.ovh.net/files/10Mb.dat 1048576 out_file.dat */
+        validateArgs(args);
+        String url = args[0];
         int speed = Integer.parseInt(args[1]);
-        String target = args[2];*/
-        String url = "https://raw.githubusercontent.com/peterarsentev/course_test/master/pom.xml";
-        int speed = 100;
-        String target = "out_file.xml";
+        String target = args[2];
         Thread wget = new Thread(new Wget(url, speed, target));
         wget.start();
+        System.out.println("Начинаем загрузку... ");
         wget.join();
     }
 }
