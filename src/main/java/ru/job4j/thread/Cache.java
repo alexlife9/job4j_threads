@@ -16,4 +16,5 @@ public final class Cache {
         }
         return cache;
     }
+    /* Добавляю коммит */
 }
