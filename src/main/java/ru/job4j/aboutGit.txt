@@ -24,6 +24,7 @@ About Git
 
 В ветке master всех новых файлов и изменений старых файлов - не будет, что в принципе и логично.
 
+Например, создаем новую ветку task_124176:
 git branch task_124176
 git branch
 git checkout task_124176
@@ -32,3 +33,8 @@ git status
 git add README.md
 git commit -m "Ветка task_124176"
 git push origin task_124176
+git checkout master
+
+
+Для того, чтобы выгрузить все изменения из github нужно в ИДЕА выполнить команду VCS - Git - Fetch.
+Или в консоле git fetch. Это команда выгружает все состояния из удаленного репозитория.
