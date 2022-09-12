@@ -15,7 +15,7 @@ import java.net.URL;
  * Пауза должна вычисляться, а не быть константой.
  *
  * @author Alex_life
- * @version 2.0
+ * @version 3.0
  * @since 12.09.2022
  */
 public class Wget implements Runnable {
@@ -49,12 +49,7 @@ public class Wget implements Runnable {
                     if (timeDownloads < 1000) { /* если время загрузки меньше 1 секунды */
                         Thread.sleep(1000 - timeDownloads); /* то вводим задержку равную остатку от секунды */
                     }
-                    for (int i = 0; i < 100; i++) {
-                        System.out.print("\rЗагрузка : " + i + "%");
-                        Thread.sleep(1000 - timeDownloads);
-                    }
                 }
-
                 timeStart = System.currentTimeMillis(); /* перед завершением цикла устанавливаем текущее время */
                 bytesWrited = 0; /* и обнуляем счетчик прочитанных байт */
             }
@@ -69,14 +64,16 @@ public class Wget implements Runnable {
 
     public static void validateArgs(String[] args) {
         if (args.length != 3) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("некорректное кол-во аргументов. "
+                    + "Перед запуском мейна в конфигурацию в поле program arguments необходимо прописать 3 аргумента:\n"
+                    + "источник откуда скачивать, скорость ограничения скачивания и куда скачивать");
         }
 
     }
 
     public static void main(String[] args) throws InterruptedException {
         /* перед запуском мейна прописываем в конфигурацию в поле program arguments следующую строку:
-        * https://proof.ovh.net/files/10Mb.dat 1048576 out_file.dat */
+        * https:\\proof.ovh.net/files/10Mb.dat 1048576 out_file.dat */
         validateArgs(args);
         String url = args[0];
         int speed = Integer.parseInt(args[1]);
