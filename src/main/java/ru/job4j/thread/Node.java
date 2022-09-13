@@ -8,11 +8,13 @@ package ru.job4j.thread;
  * 1. Все поля отмечены final.
  * 2. Состояние объекта не изменяется после создания объекта.
  *
+ * immutable это еще и запрет наследования
+ *
  * @author Alex_life
- * @version 1.0
+ * @version 2.0
  * @since 13.09.2022
  */
-public class Node<T> {
+public final class Node<T> {
     private final Node<T> next;
     private final T value;
 
