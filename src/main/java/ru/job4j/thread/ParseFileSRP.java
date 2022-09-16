@@ -7,7 +7,7 @@ import java.util.function.Predicate;
  * Visibility. Общий ресурс вне критической секции
  *
  * @author Alex_life
- * @version 1.0
+ * @version 2.0
  * @since 16.09.2022
  */
 public class ParseFileSRP {
@@ -38,12 +38,5 @@ public class ParseFileSRP {
 
     public String getContent() throws IOException {
         return content(data -> true);
-    }
-
-    public void saveContent(String content) throws IOException {
-        OutputStream o = new FileOutputStream(file);
-        for (int i = 0; i < content.length(); i += 1) {
-            o.write(content.charAt(i));
-        }
     }
 }
