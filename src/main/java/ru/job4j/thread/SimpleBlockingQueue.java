@@ -102,7 +102,7 @@ public class SimpleBlockingQueue<T> {
         consumer.start();
     }
 
-    public boolean isEmpty() {
+    public synchronized boolean isEmpty() {
         return queue.isEmpty();
     }
 }
