@@ -68,8 +68,8 @@ public class SimpleBlockingQueue<T> {
      * Метод consumer() должен вернуть объект из внутренней коллекции.
      * Если в коллекции объектов нет, то нужно перевести текущую нить в состояние ожидания.
      */
-    public synchronized void consumer() {
-        while (queue.isEmpty()) {
+    public synchronized T consumer() {
+        while (isEmpty()) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -79,6 +79,7 @@ public class SimpleBlockingQueue<T> {
         T value = queue.poll();
         System.out.println("Удалили элемент из очереди: " + value);
         notify();
+        return value;
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -99,5 +100,9 @@ public class SimpleBlockingQueue<T> {
 
         producer.start();
         consumer.start();
+    }
+
+    public boolean isEmpty() {
+        return queue.isEmpty();
     }
 }
