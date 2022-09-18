@@ -28,8 +28,8 @@ import java.util.Optional;
  * Поле accounts - это общий ресурс для нитей, поэтому этот объект можно использовать в качестве объекта монитора.
  *
  * @author Alex_life
- * @version 1.0
- * @since 17.09.2022
+ * @version 2.0
+ * @since 18.09.2022
  */
 @ThreadSafe
 public class AccountStorage {
@@ -41,36 +41,24 @@ public class AccountStorage {
      * @param account добавление нового счета
      * @return успешность добавления
      */
-    public boolean add(Account account) {
-        synchronized (accounts) {
-            Optional<Account> user = Optional.ofNullable(accounts.putIfAbsent(account.id(), account));
-            return user.isEmpty();
-        }
+    public synchronized boolean add(Account account) {
+        return accounts.putIfAbsent(account.id(), account) == null;
     }
 
     /**
-     *
      * @param account - счет на замену
      * @return успешность обновления счета
      */
-    public boolean update(Account account) {
-        synchronized (accounts) {
-            Optional<Account> user = Optional.ofNullable(accounts.replace(account.id(), account));
-            return user.isPresent();
-        }
+    public synchronized boolean update(Account account) {
+        return accounts.replace(account.id(), account) != null;
     }
 
-    public boolean delete(int id) {
-        synchronized (accounts) {
-            Optional<Account> user = Optional.ofNullable(accounts.remove(id));
-            return user.isPresent();
-        }
+    public synchronized boolean delete(int id) {
+        return accounts.remove(id) != null;
     }
 
-    public Optional<Account> getById(int id) {
-        synchronized (accounts) {
-            return Optional.ofNullable(accounts.get(id));
-        }
+    public synchronized Optional<Account> getById(int id) {
+        return Optional.ofNullable(accounts.get(id));
     }
 
     /**
@@ -81,17 +69,15 @@ public class AccountStorage {
      * @param amount -СКОЛЬКО будем переводить
      * @return -успешно или не очень завершен перевод
      */
-    public boolean transfer(int fromId, int toId, int amount) {
-        synchronized (accounts) {
-            boolean rsl = false;
-            Optional<Account> from = getById(fromId);
-            Optional<Account> to = getById(toId);
-            if (from.isPresent() && to.isPresent() && from.get().amount() >= amount) {
-                accounts.replace(fromId, new Account(from.get().id(), from.get().amount() - amount));
-                accounts.replace(toId, new Account(to.get().id(), to.get().amount() + amount));
-                rsl = true;
-            }
-            return rsl;
+    public synchronized boolean transfer(int fromId, int toId, int amount) {
+        boolean rsl = false;
+        Optional<Account> from = getById(fromId);
+        Optional<Account> to = getById(toId);
+        if (amount >= 0 && (from.isPresent() && to.isPresent() && from.get().amount() >= amount)) {
+            accounts.replace(fromId, new Account(from.get().id(), from.get().amount() - amount));
+            accounts.replace(toId, new Account(to.get().id(), to.get().amount() + amount));
+            rsl = true;
         }
+        return rsl;
     }
 }

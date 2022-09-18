@@ -8,8 +8,8 @@ import static org.assertj.core.api.Assertions.*;
  * Денежные переводы AccountStorage
  *
  * @author Alex_life
- * @version 1.0
- * @since 17.09.2022
+ * @version 2.0
+ * @since 18.09.2022
  */
 class AccountStorageTest {
 
@@ -60,6 +60,14 @@ class AccountStorageTest {
         storage.add(new Account(1, 100));
         storage.add(new Account(2, 100));
         assertThat(storage.transfer(1, 2, 150)).isFalse();
+    }
+
+    @Test
+    void whenTransferOverAmount2() {
+        var storage = new AccountStorage();
+        storage.add(new Account(1, 100));
+        storage.add(new Account(2, 100));
+        assertThat(storage.transfer(2, 1, 30)).isTrue();
     }
 
     @Test
