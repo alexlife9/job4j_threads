@@ -14,8 +14,8 @@ import java.util.List;
  * То есть сама коллекция будет общим ресурсом между нитями.
  *
  * @author Alex_life
- * @version 1.0
- * @since 17.09.2022
+ * @version 2.0
+ * @since 18.09.2022
  */
 
 @ThreadSafe
@@ -32,7 +32,7 @@ public class SingleLockList<T> implements Iterable<T> {
     }
 
     public synchronized T get(int index) {
-        return copy(list).get(index);
+        return list.get(index);
     }
 
     public synchronized List<T> copy(List<T> list) {
