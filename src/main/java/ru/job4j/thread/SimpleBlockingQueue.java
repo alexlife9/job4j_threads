@@ -31,8 +31,8 @@ import java.util.Queue;
  * выполнить этот метод. Либо монитор снова захватит первая нить.
  *
  * @author Alex_life
- * @version 1.0
- * @since 17.09.2022
+ * @version 2.0
+ * @since 18.09.2022
  */
 @ThreadSafe
 public class SimpleBlockingQueue<T> {
@@ -50,13 +50,9 @@ public class SimpleBlockingQueue<T> {
      * метод producer добавляет элементы в очередь
      * @param value - значение элемента
      */
-    public synchronized void producer(T value) {
+    public synchronized void producer(T value) throws InterruptedException {
         while (queue.size() == maxSize) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            wait();
         }
         queue.add(value);
         System.out.println("Добавили в очередь элемент: " + value);
@@ -68,13 +64,9 @@ public class SimpleBlockingQueue<T> {
      * Метод consumer() должен вернуть объект из внутренней коллекции.
      * Если в коллекции объектов нет, то нужно перевести текущую нить в состояние ожидания.
      */
-    public synchronized T consumer() {
+    public synchronized T consumer() throws InterruptedException {
         while (isEmpty()) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            wait();
         }
         T value = queue.poll();
         System.out.println("Удалили элемент из очереди: " + value);
@@ -87,14 +79,22 @@ public class SimpleBlockingQueue<T> {
         Thread producer = new Thread(
                 () -> {
                     for (int i = 0; i < 300; i++) {
-                        simple.producer(i);
+                        try {
+                            simple.producer(i);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
         });
 
         Thread consumer = new Thread(
                 () -> {
                     for (int i = 0; i < 300; i++) {
-                        simple.consumer();
+                        try {
+                            simple.consumer();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
         });
 

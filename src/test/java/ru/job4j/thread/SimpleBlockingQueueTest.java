@@ -20,8 +20,8 @@ import static org.assertj.core.api.Assertions.*;
  *
  *
  * @author Alex_life
- * @version 2.0
- * @since 17.09.2022
+ * @version 3.0
+ * @since 18.09.2022
  */
 public class SimpleBlockingQueueTest {
 
@@ -32,7 +32,11 @@ public class SimpleBlockingQueueTest {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(5);
         Thread producer = new Thread(() -> {
             for (int i = 90; i <= 100; i++) {
-                queue.producer(i);
+                try {
+                    queue.producer(i);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
         producer.start();
@@ -40,7 +44,11 @@ public class SimpleBlockingQueueTest {
         Thread consumer = new Thread(
                 () -> {
                     while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
-                        buffer.add(queue.consumer());
+                        try {
+                            buffer.add(queue.consumer());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
         );
@@ -59,9 +67,15 @@ public class SimpleBlockingQueueTest {
         final CopyOnWriteArrayList<Integer> buffer = new CopyOnWriteArrayList<>();
         final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(10);
         Thread producer = new Thread(
-                () -> IntStream.range(0, 5).forEach(
-                        queue::producer
-                )
+                () -> {
+                    for (int i = 0; i < 5; i++) {
+                        try {
+                            queue.producer(i);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
         );
         producer.start();
 
@@ -73,7 +87,11 @@ public class SimpleBlockingQueueTest {
         Thread consumer = new Thread(
                 () -> {
                     while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
-                        buffer.add(queue.consumer());
+                        try {
+                            buffer.add(queue.consumer());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
         );
