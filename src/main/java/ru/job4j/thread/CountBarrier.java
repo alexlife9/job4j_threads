@@ -7,8 +7,8 @@ package ru.job4j.thread;
  * Разработать класс, который блокирует выполнение по условию счетчика.
  *
  * @author Alex_life
- * @version 1.0
- * @since 17.09.2022
+ * @version 2.0
+ * @since 18.09.2022
  */
 public class CountBarrier {
     private final Object monitor = this;
@@ -29,8 +29,8 @@ public class CountBarrier {
      */
     public void count() {
         synchronized (monitor) {
-            monitor.notifyAll();
             count++;
+            monitor.notifyAll();
         }
     }
 
