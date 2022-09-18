@@ -36,8 +36,8 @@ public class ParallelSearch {
         new Thread(
                 () -> {
                     for (int index = 0; index != 10; index++) {
-                        queue.producer(index);
                         try {
+                            queue.producer(index);
                             Thread.sleep(50);
                         } catch (InterruptedException e) {
                             e.printStackTrace();

@@ -50,13 +50,9 @@ public class SimpleBlockingQueue<T> {
      * метод producer добавляет элементы в очередь
      * @param value - значение элемента
      */
-    public synchronized void producer(T value) {
+    public synchronized void producer(T value) throws InterruptedException {
         while (queue.size() == maxSize) {
-            try {
                 wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
         queue.add(value);
         System.out.println("Добавили в очередь элемент: " + value);
@@ -83,7 +79,11 @@ public class SimpleBlockingQueue<T> {
         Thread producer = new Thread(
                 () -> {
                     for (int i = 0; i < 300; i++) {
-                        simple.producer(i);
+                        try {
+                            simple.producer(i);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
         });
 
