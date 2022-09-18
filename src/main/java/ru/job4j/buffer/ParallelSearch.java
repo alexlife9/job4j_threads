@@ -13,8 +13,8 @@ import ru.job4j.thread.SimpleBlockingQueue;
  * Когда первая нить заканчивает свою работу, потребители переходят в режим wait.
  *
  * @author Alex_life
- * @version 1.0
- * @since 17.09.2022
+ * @version 2.0
+ * @since 18.09.2022
  */
 public class ParallelSearch {
 
@@ -23,7 +23,11 @@ public class ParallelSearch {
         final Thread consumer = new Thread(
                 () -> {
                     while (true) {
-                        System.out.println(queue.consumer());
+                        try {
+                            System.out.println(queue.consumer());
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
         );
