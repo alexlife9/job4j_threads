@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -20,8 +19,8 @@ import static org.assertj.core.api.Assertions.*;
  *
  *
  * @author Alex_life
- * @version 3.0
- * @since 18.09.2022
+ * @version 4.0
+ * @since 19.09.2022
  */
 public class SimpleBlockingQueueTest {
 
@@ -32,11 +31,7 @@ public class SimpleBlockingQueueTest {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(5);
         Thread producer = new Thread(() -> {
             for (int i = 90; i <= 100; i++) {
-                try {
-                    queue.producer(i);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                queue.producer(i);
             }
         });
         producer.start();
@@ -69,11 +64,7 @@ public class SimpleBlockingQueueTest {
         Thread producer = new Thread(
                 () -> {
                     for (int i = 0; i < 5; i++) {
-                        try {
-                            queue.producer(i);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        queue.producer(i);
                     }
                 }
         );
