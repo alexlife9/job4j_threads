@@ -15,8 +15,8 @@ import java.util.Objects;
  * Это даст значительный прирост скорости.
  *
  * @author Alex_life
- * @version 1.0
- * @since 19.09.2022
+ * @version 2.0
+ * @since 24.09.2022
  */
 public class Base {
     /**
@@ -59,20 +59,20 @@ public class Base {
                 + '}';
     }
 
-    public static void main(String[] args) {
-        Map<Integer, Base> map = new HashMap<>();
-        Base base = new Base(1, 0);
-        map.put(base.getId(), base);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Base base = (Base) o;
+        return id == base.id && version == base.version && Objects.equals(name, base.name);
+    }
 
-        Base user1 = map.get(1);
-        user1.setName("User 1");
-
-        Base user2 = map.get(1);
-        user1.setName("User 2");
-
-        map.put(user1.getId(), user1);
-        map.put(user2.getId(), user2);
-
-        System.out.println(map);
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, version, name);
     }
 }

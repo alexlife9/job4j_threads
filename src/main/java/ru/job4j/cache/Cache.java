@@ -17,8 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * То есть в кеше сохраняться данные только последнего пользователя.
  *
  * @author Alex_life
- * @version 1.0
- * @since 19.09.2022
+ * @version 2.0
+ * @since 24.09.2022
  */
 public class Cache {
     private final Map<Integer, Base> memory = new ConcurrentHashMap<>();
@@ -55,7 +55,9 @@ public class Cache {
             if (model.getVersion() != b.getVersion()) {
                 throw new OptimisticException("Модель была уже обновлена");
             }
-            return new Base(model.getId(), b.getVersion() + 1);
+            Base temp = new Base(model.getId(), b.getVersion() + 1);
+            temp.setName(model.getName());
+            return temp;
         });
         return base != null;
     }
