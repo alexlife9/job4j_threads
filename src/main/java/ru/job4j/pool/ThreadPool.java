@@ -23,8 +23,9 @@ import java.util.List;
  * 3. Создать метод shutdown() - этот метод завершит все запущенные задачи.
  *
  * @author Alex_life
- * @version 1.0
- * @since 26.09.2022
+ * @version 2.0
+ * вынес логику в конструктор
+ * @since 27.09.2022
  */
 public class ThreadPool {
 
@@ -33,17 +34,13 @@ public class ThreadPool {
     private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>(size);
 
     /**
-     * метод work добавляет задачи в очередь
      * size - это кол-во потоков, соответствующее кол-ву ядер в системе
      * для каждого ядра добавляем новый поток, в котором находится задача job
      * пока флаг isInterrupted не true - получаем задачу из очереди
-     * tasks.producer(job) - заполняем очередь задачами
-     *
-     * @param job задача которую надо добавить
      */
-    public void work(Runnable job) throws InterruptedException {
+    public ThreadPool() {
         for (int i = 0; i < size; i++) {
-            threads.add(new Thread(
+            Thread thread = (new Thread(
                     () -> {
                         try {
                             while (!Thread.currentThread().isInterrupted()) {
@@ -54,7 +51,17 @@ public class ThreadPool {
                         }
                     }
             ));
+            thread.start();
+            threads.add(thread);
         }
+    }
+
+    /**
+     * метод work добавляет задачи в очередь
+     * tasks.producer(job) - заполняем очередь задачами
+     * @param job задача которую надо добавить
+     */
+    public void work(Runnable job) throws InterruptedException {
         tasks.producer(job);
     }
 
