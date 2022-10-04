@@ -12,17 +12,17 @@ import java.util.concurrent.RecursiveTask;
  * Метод поиска должен быть обобщенным.
  *
  * @author Alex_life
- * @version 1.0
- * @since 03.10.2022
+ * @version 2.0
+ * @since 04.10.2022
  */
-public class ParallelFindIndex extends RecursiveTask<Integer> {
+public class ParallelFindIndex<T> extends RecursiveTask<Integer> {
 
-    private final int[] array;
-    private final int value;
+    private final T[] array;
+    private final T value;
     private final int from;
     private final int to;
 
-    public ParallelFindIndex(int[] array, int value, int from, int to) {
+    public ParallelFindIndex(T[] array, T value, int from, int to) {
         this.array = array;
         this.value = value;
         this.from = from;
@@ -31,11 +31,8 @@ public class ParallelFindIndex extends RecursiveTask<Integer> {
 
     public int findLine() {
         int rsl = -1;
-        if (from == to) {
-            return array[0];
-        }
         for (int i = from; i <= to; i++) {
-            if (array[i] == value) {
+            if (array[i].equals(value)) {
                 rsl = i;
                 break;
             }
@@ -49,15 +46,15 @@ public class ParallelFindIndex extends RecursiveTask<Integer> {
             findLine();
         }
         int mid = (from + to) / 2;
-        ParallelFindIndex leftSort = new ParallelFindIndex(array, value, from, mid);
-        ParallelFindIndex rightSort = new ParallelFindIndex(array, value, mid +1, to);
+        ParallelFindIndex<T> leftSort = new ParallelFindIndex<>(array, value, from, mid);
+        var rightSort = new ParallelFindIndex<>(array, value, mid +1, to);
         leftSort.fork();
         rightSort.fork();
         return Math.max(leftSort.join(), rightSort.join());
     }
 
-    public static Integer findIndex(int[] array, int value) {
+    public static <T> int findIndex(T[] array, T value) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
-        return forkJoinPool.invoke(new ParallelFindIndex(array, value, 0, array.length - 1));
+        return forkJoinPool.invoke(new ParallelFindIndex<>(array, value, 0, array.length - 1));
     }
 }
