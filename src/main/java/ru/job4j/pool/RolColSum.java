@@ -14,35 +14,10 @@ import java.util.concurrent.ExecutionException;
  * 3. Реализовать асинхронную версию программы
  *
  * @author Alex_life
- * @version 1.0
- * @since 04.10.2022
+ * @version 2.0
+ * @since 05.10.2022
  */
 public class RolColSum {
-    public static class Sums {
-        private int rowSum;
-        private int colSum;
-
-        public Sums(int rowSum, int colSum) {
-            this.rowSum = rowSum;
-            this.colSum = colSum;
-        }
-
-        public int getRowSum() {
-            return rowSum;
-        }
-
-        public void setRowSum(int rowSum) {
-            this.rowSum = rowSum;
-        }
-
-        public int getColSum() {
-            return colSum;
-        }
-
-        public void setColSum(int colSum) {
-            this.colSum = colSum;
-        }
-    }
 
     /* метод counting подсчитывает суммы элементов в строках и столбцах
      * matrix - квадратная матрица
