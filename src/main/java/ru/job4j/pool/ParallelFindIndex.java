@@ -12,8 +12,8 @@ import java.util.concurrent.RecursiveTask;
  * Метод поиска должен быть обобщенным.
  *
  * @author Alex_life
- * @version 2.0
- * @since 04.10.2022
+ * @version 3.0
+ * @since 05.10.2022
  */
 public class ParallelFindIndex<T> extends RecursiveTask<Integer> {
 
@@ -43,7 +43,7 @@ public class ParallelFindIndex<T> extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
         if (to - from < 10) {
-            findLine();
+            return findLine();
         }
         int mid = (from + to) / 2;
         ParallelFindIndex<T> leftSort = new ParallelFindIndex<>(array, value, from, mid);

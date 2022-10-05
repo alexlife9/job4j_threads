@@ -25,8 +25,8 @@ class ParallelFindIndexTest {
         for (int i = 0; i < array.length; i++) {
             array[i] = i;
         }
-        int rsl = ParallelFindIndex.findIndex(array, 2);
-        assertThat(rsl).isEqualTo(1);
+        int rsl = ParallelFindIndex.findIndex(array, 40);
+        assertThat(rsl).isEqualTo(40);
     }
 
 }
